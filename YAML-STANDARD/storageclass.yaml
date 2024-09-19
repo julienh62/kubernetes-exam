@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: default  # Nom de la StorageClass
+provisioner: rancher.io/hostpath  # Provisionneur de stockage pour Rancher (ajustez selon la configuration de Rancher)
+reclaimPolicy: Retain  # Politique de conservation du volume lorsque le PVC est supprimé
+volumeBindingMode: Immediate  # Le volume est lié au PVC immédiatement
+

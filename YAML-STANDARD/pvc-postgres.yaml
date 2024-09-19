@@ -1,0 +1,14 @@
+# PersistentVolumeClaim pour PostgreSQL
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc  # Nom du PersistentVolumeClaim
+  namespace: standard
+spec:
+  accessModes:
+    - ReadWriteOnce  # Mode d'accès pour le volume (un seul Pod peut y accéder en écriture à la fois)
+  resources:
+    requests:
+      storage: 10Gi  # Taille demandée pour le volume de stockage
+  storageClassName: default  # Utilisation de la StorageClass par défaut configurée dans le cluster
+

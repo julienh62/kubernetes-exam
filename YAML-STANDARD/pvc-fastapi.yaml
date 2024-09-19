@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fastapi-pvc
+  namespace: standard
+spec:
+  accessModes:
+    - ReadWriteMany  # Permet à plusieurs Pods de lire et écrire sur ce volume simultanément
+  resources:
+    requests:
+      storage: 10Gi  # Taille demandée pour le volume de stockage
+  storageClassName: multi-writer  # Utilise la StorageClass configurée pour permettre l'accès à plusieurs Pods
+
