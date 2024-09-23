@@ -29,6 +29,8 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: password  # Référence à la clé du Secret pour le mot de passe PostgreSQL
+            - name: POSTGRES_DB 
+              value: storedb
           ports:
             - containerPort: 5432  # Port exposé par le conteneur PostgreSQL
           volumeMounts:
