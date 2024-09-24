@@ -1,0 +1,3 @@
+[submodule "kubernetes-exam"]
+	path = kubernetes-exam
+	url = https://github.com/julienh62/kubernetes-exam.git
