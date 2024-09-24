@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service  # Nom du service
+  namespace: standard    # Namespace dans lequel déployer le service
+spec:
+  selector:
+    app: fastapi  # Sélecteur de labels pour associer les Pods avec ce service
+  ports:
+    - protocol: TCP
+      port: 80  # Port exposé par le service
+      targetPort: 5000  # Port sur lequel le service envoie le trafic au conteneur
+  type: LoadBalancer  # Type de service qui crée un LoadBalancer externe pour exposer le service
+

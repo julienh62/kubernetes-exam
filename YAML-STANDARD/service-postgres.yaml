@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db  # Nom du service
+  namespace: standard    # Namespace dans lequel déployer le service
+spec:
+  selector:
+    app: postgres  # Sélecteur de labels pour associer les Pods avec ce service
+  ports:
+    - protocol: TCP
+      port: 5432  # Port exposé par le service pour PostgreSQL
+      targetPort: 5432  # Port sur lequel le service envoie le trafic au conteneur
+  type: ClusterIP  # Type de service interne au cluster
+

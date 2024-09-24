@@ -1,0 +1,58 @@
+# Déploiement de l'application FastAPI
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment  # Nom du déploiement
+  namespace: standard  # Spécifie le namespace pour ce déploiement
+spec:
+  replicas: 3  # Nombre de réplicas de l'application FastAPI
+  selector:
+    matchLabels:
+      app: fastapi  # Sélecteur de labels pour associer les Pods avec ce déploiement
+  template:
+    metadata:
+      labels:
+        app: fastapi  # Labels associés aux Pods créés par ce déploiement
+    spec:
+      containers:
+        - name: fastapi  # Nom du conteneur
+          image: julh62/exam-kubernetes_fastapi:latest  # Image Docker utilisée pour le conteneur (changez selon votre image)
+          ports:
+            - containerPort: 5000  # Port exposé par le conteneur
+          volumeMounts:
+            - name: fastapi-logs  # Nom du volume à monter dans le conteneur
+              mountPath: /app/logs  # Chemin à l'intérieur du conteneur où le volume est monté
+      volumes:
+        - name: fastapi-logs  # Nom du volume défini dans le déploiement
+          persistentVolumeClaim:
+            claimName: fastapi-pvc  # Référence au PersistentVolumeClaim (PVC) utilisé pour ce volume
+---
+# Service pour exposer l'application FastAPI
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service  # Nom du service
+  namespace: standard  # Spécifie le namespace pour ce service
+spec:
+  selector:
+    app: fastapi  # Sélecteur de labels pour associer les Pods avec ce service
+  ports:
+    - protocol: TCP
+      port: 80  # Port exposé par le service
+      targetPort: 5000  # Port sur lequel le service envoie le trafic au conteneur
+  type: LoadBalancer  # Type de service qui crée un LoadBalancer externe pour exposer le service
+---
+# PersistentVolumeClaim pour demander un volume de stockage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fastapi-pvc  # Nom du PersistentVolumeClaim
+  namespace: standard  # Spécifie le namespace pour ce déploiement
+spec:
+  accessModes:
+    - ReadWriteMany  # Permet à plusieurs Pods de lire et écrire sur ce volume simultanément
+  resources:
+    requests:
+      storage: 10Gi  # Taille demandée pour le volume de stockage
+  storageClassName: default  # Utilise la StorageClass par défaut configurée dans le cluster
+

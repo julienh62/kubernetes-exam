@@ -1,0 +1,61 @@
+# Déploiement de PostgreSQL en tant que StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres  # Nom du StatefulSet, utilisé pour identifier le StatefulSet dans le cluster
+  namespace: standard  # Spécifie le namespace pour ce StatefulSet
+spec:
+  serviceName: "postgres"  # Nom du service pour la découverte des Pods
+  replicas: 1  # Nombre de réplicas pour PostgreSQL (généralement 1 pour les bases de données)
+  selector:
+    matchLabels:
+      app: postgres  # Labels utilisés pour associer les Pods avec ce StatefulSet
+  template:
+    metadata:
+      labels:
+        app: postgres  # Labels attachés aux Pods créés par ce StatefulSet
+    spec:
+      containers:
+        - name: postgres  # Nom du conteneur
+          image: postgres:12.0-alpine  # Image Docker pour PostgreSQL
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username  # Référence à la clé du Secret pour le nom d'utilisateur PostgreSQL
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password  # Référence à la clé du Secret pour le mot de passe PostgreSQL
+            - name: POSTGRES_DB 
+              value: storedb
+          ports:
+            - containerPort: 5432  # Port exposé par le conteneur PostgreSQL
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data  # Chemin où les données de PostgreSQL sont stockées dans le conteneur
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage  # Nom du volume demandé
+        namespace: standard  # Spécifie le namespace pour ce StatefulSet     
+      spec:
+        accessModes: ["ReadWriteOnce"]  # Mode d'accès pour le volume (un seul Pod peut y accéder en écriture à la fois)
+        resources:
+          requests:
+            storage: 10Gi  # Taille demandée pour le volume de stockage
+        storageClassName: default  # Utilisation de la StorageClass par défaut configurée dans le cluster
+---
+# Service pour PostgreSQL
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres  # Nom du service pour PostgreSQL
+spec:
+  ports:
+    - port: 5432  # Port exposé par le service
+  clusterIP: None  # Service sans IP de cluster, utilisé pour les StatefulSets
+  selector:
+    app: postgres  # Labels utilisés pour associer les Pods avec ce service
+
