@@ -1,0 +1,12 @@
+# Ignorer les fichiers de logs
+logs/
+
+# Ignorer les fichiers volumineux
+*.zip
+*.tar  # Ignorer les fichiers .tar
+
+# Ignorer le Dockerfile de l'application FastAPI
+Dockerfile
+
+# Ignorer un répertoire où les fichiers de l'application sont stockés
+images/
