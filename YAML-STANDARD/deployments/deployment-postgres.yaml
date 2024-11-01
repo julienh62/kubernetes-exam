@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment  # Nom du déploiement
+  namespace: standard  # Spécifie le namespace pour ce déploiement
+spec:
+  replicas: 1  # Un seul réplicat pour la base de données
+  selector:
+    matchLabels:
+      app: db  # Sélecteur de labels pour associer les Pods avec ce déploiement
+  template:
+    metadata:
+      labels:
+        app: db  # Labels associés aux Pods créés par ce déploiement
+    spec:
+      containers:
+        - name: postgres  # Nom du conteneur PostgreSQL
+          image: postgres:12.0-alpine  # Image Docker pour PostgreSQL
+          ports:
+            - containerPort: 5432  # Port exposé par le conteneur
+          env:
+            - name: POSTGRES_USER
+              value: "admin"  # Nom d'utilisateur pour la base de données
+            - name: POSTGRES_PASSWORD
+              value: "cGFzc3dvcmQ="  # Mot de passe pour la base de données encodé en base64
+            - name: POSTGRES_DB
+              value: "c3RvcmVkYg=="  # Nom de la base de données encodé

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment  # Nom du déploiement
+  namespace: standard  # Spécifie le namespace pour ce déploiement
+spec:
+  replicas: 3  # Nombre de réplicas de l'application FastAPI
+  selector:
+    matchLabels:
+      app: fastapi  # Sélecteur de labels pour associer les Pods avec ce déploiement
+  template:
+    metadata:
+      labels:
+        app: fastapi  # Labels associés aux Pods créés par ce déploiement
+    spec:
+      containers:
+        - name: fastapi  # Nom du conteneur
+          image: julh62/exam-kubernetes_fastapi:latest  # Image Docker utilisée pour le conteneur (changez selon votre image)
+          ports:
+            - containerPort: 5000  # Port exposé par le conteneur
+          env:  # Variables d'environnement pour la connexion à la base de données
+            - name: POSTGRES_HOST
+              value: "db"  # Nom du service de la base de données
+            - name: POSTGRES_DB
+              value: "c3RvcmVkYg=="  # Nom de la base de données encodé en base64
+            - name: POSTGRES_USER
+              value: "admin"  # Nom d'utilisateur pour la base de données
+            - name: POSTGRES_PASSWORD
+              value: "cGFzc3dvcmQ="  # Mot de passe pour la base de donn
