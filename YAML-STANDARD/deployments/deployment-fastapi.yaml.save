@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: fastapi-deployment  # Nom du déploiement
 spec:
-  replicas: 1  # Nombre de réplicas
+  replicas: 3  # Nombre de réplicas
   selector:
     matchLabels:
       app: fastapi  # Label pour sélectionner les pods
@@ -13,8 +13,8 @@ spec:
         app: fastapi  # Labels associés aux Pods
     spec:
       containers:
-        - name: fastapi1  # Nom du conteneur
-          image: julh62/exam12:latest  # Image Docker du conteneur
+        - name: fastapi-container  # Nom du conteneur
+          image: julh62/exam-kubernetes_fastapi:latest  # Image Docker du conteneur
           resources:
             requests:
               cpu: "250m"  # Demande de CPU
@@ -23,7 +23,7 @@ spec:
               cpu: "500m"  # Limite de CPU
               memory: "1Gi"  # Limite de mémoire
           ports:
-            - containerPort: 8000  # Port exposé par le conteneur
+            - containerPort: 5000  # Port exposé par le conteneur
           env:  # Variables d'environnement pour la connexion à la base de données
             - name: POSTGRES_HOST
               value: "db"
