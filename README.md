@@ -157,9 +157,7 @@ Vous pouvez aussi inspecter les pods pour vous assurer qu’ils sont bien créé
 bash
 
 kubectl get pods
-docker images
-REPOSITORY      TAG       IMAGE ID       CREATED        SIZE
-fastapi-image   latest    69a63e0b5077   10 hours ago   486MB
+
 
 
 
@@ -168,9 +166,15 @@ docker login -u julh62
 
 #«Construire l'image
 docker build -t julh62/exam-kubernetes_fastapi:latest .
+#verifier image
+docker images
 
 #Pousse
 docker push julh62/exam-kubernetes_fastapi:latest
+
+# si l'image existe deja 
+docker pull julh62/exam-kubernetes_fastapi:latest
+
 
 #changer le nom de l'imge dans le fichier de deployment de fastapi
 containers:
