@@ -217,3 +217,20 @@ Cela supprimera toute configuration et tout état laissé par K3s.
 Si vous souhaitez également nettoyer les conteneurs Docker (en cas de réutilisation de Docker), vous pouvez supprimer tous les conteneurs et images Docker :
 
 sudo docker system prune -a
+    Vérifie si des contrôleurs (Deployments, DaemonSets) gèrent les pods avec kubectl get all --all-namespaces.
+    Supprime ces contrôleurs pour éviter la régénération automatique des pods.
+   
+Les pods que tu vois sont gérés par des Deployments (comme coredns, local-path-provisioner, metrics-server). Pour éviter qu'ils ne soient recréés à chaque suppression de pod, il faut supprimer ces Deployments.
+
+kubectl delete deployment coredns -n kube-system
+kubectl delete deployment local-path-provisioner -n kube-system
+kubectl delete deployment metrics-server -n kube-system
+
+2. Supprimer les Jobs en cours
+
+Les Jobs comme helm-delete-traefik et helm-install-traefik sont en cours d'exécution. S'ils ne sont plus nécessaires, tu peux les supprimer pour libérer des ressources :
+
+kubectl delete job helm-delete-traefik -n kube-system
+kubectl delete job helm-delete-traefik-crd -n kube-system
+kubectl delete job helm-install-traefik -n kube-system
+kubectl delete job helm-install-traefik-crd -n kube-system
